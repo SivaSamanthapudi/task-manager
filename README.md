@@ -1,6 +1,7 @@
 # Mean
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+This application is built with Node.js for backend, by using express and MongoDB as Database as well as Angular for client side with bootstrap for UI. This is created for learning purpose.
 
 ## Development server
 
