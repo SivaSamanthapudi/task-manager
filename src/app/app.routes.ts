@@ -7,18 +7,21 @@ import { HomeComponent } from '../features/home/home.component';
 import { LoginComponent } from '../features/login/login.component';
 import { SignupComponent } from '../features/signup/signup.component';
 import { ForgotComponent } from '../features/forgot/forgot.component';
+import { authGuard } from '../guards/auth-guard';
 
 export const routes: Routes = [
-  { path: 'posts', component: PostsComponent, pathMatch: 'full' },
   {
     path: 'users',
     component: UsersComponent,
     pathMatch: 'full',
+    canActivate: [authGuard],
   },
+  { path: 'posts', component: PostsComponent, pathMatch: 'full', canActivate: [authGuard] },
   {
     path: 'tasks',
     component: TasksComponent,
     pathMatch: 'full',
+    canActivate: [authGuard],
   },
   {
     path: 'home',
@@ -45,5 +48,4 @@ export const routes: Routes = [
     component: PageNotFoundComponent,
     pathMatch: 'full',
   },
-  
 ];

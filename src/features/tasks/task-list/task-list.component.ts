@@ -6,6 +6,7 @@ import { Signal } from '@angular/core';
 import { TasksService } from '../../../services/tasks.service';
 import { Task } from '../../../models/task.model';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-task-list',
@@ -21,12 +22,14 @@ export class TaskListComponent {
   itemsPerPage: number = 5;
   totalTasks: number;
 
-  constructor() {}
+  constructor(public userService: UserService) {}
 
   ngOnInit() {
     this.taskService.getTasks();
+    this.userService.getUsers();
     this.totalTasks = this.taskService.totalCount();
   }
+
 
   onEdit(task: Task) {
     this.editedTask = { ...task, dueBy: this.formatDateForInput(task.dueBy) };
@@ -34,6 +37,9 @@ export class TaskListComponent {
   }
 
   formatDateForInput(date: string | Date): string {
+    if(!date){
+      return null;
+    }
     const d = new Date(date);
     // Extract YYYY-MM-DD
     return d.toISOString().split('T')[0];

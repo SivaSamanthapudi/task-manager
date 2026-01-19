@@ -16,37 +16,16 @@ export class LoginComponent implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {}
 
   onLogin(loginForm) {
-    this.userService.authenticateUser(loginForm.value.email, loginForm.value.password).subscribe(
-      (res) => {
-        console.log('Login successful:', res);
-        this.isLoggedIn = true;
-        // localStorage.setItem('jwt_token', res.token);
-        this.authService.setAuthToken(res.token);
-        this.authService.setLoggedUserInfo(res.user.firstName);
-        // this.router.navigateByUrl('/posts');
-      },
-      (error) => {
-        console.error('Error during login:', error);
-        this.handleLoginError(error);
-      },
-    );
+    this.authService.authenticateUser(loginForm.value.email, loginForm.value.password);
   }
 
-  handleLoginError(error: any) {
-    if(error.error && error.error.code === 'USER_EMAIL_NOT_FOUND') {
-      alert('No account found with this email. Please sign up first.');
-    } else if (error.error && error.error.code === 'INVALID_CREDENTIALS') {
-      alert('Incorrect credentials. Please try again.');
-    }
-  }
-
-  onForgot(){
+  onForgot() {
     this.router.navigateByUrl('/forgot-password');
   }
 }

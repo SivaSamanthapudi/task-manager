@@ -1,16 +1,17 @@
 import { USER_API_URL } from './../constants/constants';
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
 import { Observable } from 'rxjs';
+import { User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private _users = signal<any[]>([]);
+  private _users = signal<User[]>([]);
   users = this._users.asReadonly();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   getUsers() {
     this.http
@@ -32,8 +33,7 @@ export class UserService {
     return users.some((user) => user.email === email);
   }
 
-  authenticateUser(email: any, password: any) {
-    const USER_LOGIN_API_URL = `${USER_API_URL}/login`;
-    return this.http.post<any>(USER_LOGIN_API_URL, { email, password });
+  getUserNameById(userId: string) {
+    return this.users().find((user)=> user._id == userId).firstName
   }
 }

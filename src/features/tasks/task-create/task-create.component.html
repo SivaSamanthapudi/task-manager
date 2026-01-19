@@ -12,7 +12,7 @@
         <form (submit)="onAddTask(postForm)" #postForm="ngForm" novalidate>
           <div class="mb-3">
             <label for="title" class="form-label">Title:</label>
-            <input type="text" #title="ngModel" name="title" ngModel required minlength="3" class="form-control"
+            <input type="text" name="title" ngModel required minlength="3" class="form-control"
               id="title">
           </div>
           <div class="mb-3">
@@ -22,7 +22,7 @@
           </div>
           <div class="mb-3">
             <label for="dueBy" class="form-label">Due by:</label>
-            <input type="date" #title="ngModel" name="dueBy" ngModel required minlength="3" class="form-control"
+            <input type="date" name="dueBy" ngModel required minlength="3" class="form-control"
               id="dueBy">
           </div>
           <div class="text-center">

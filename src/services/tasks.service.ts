@@ -28,6 +28,7 @@ export class TasksService {
               createdAt: new Date(p.createdAt),
               updatedOn: p.updatedOn ? new Date(p.updatedOn) : null,
               dueBy: p.dueBy ? new Date(p.dueBy) : null,
+              creator: p.creator ?? null
             })),
           };
         }),

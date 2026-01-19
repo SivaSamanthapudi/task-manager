@@ -3,6 +3,7 @@ const Task = require('../models/task.model');
 exports.addTask = async (req, res) => {
   try {
     const { title, description, createdAt, dueBy } = req.body;
+    const creator = req.userData.userId;
 
     // ✅ Validate required fields
     if (!title || !description) {
@@ -18,6 +19,7 @@ exports.addTask = async (req, res) => {
       createdAt: createdAt ?? new Date(),
       dueBy: dueBy ?? null,
       updatedOn: null,
+      creator
     });
 
     const createdTask = await task.save();
@@ -31,6 +33,7 @@ exports.addTask = async (req, res) => {
         createdAt: createdTask.createdAt ?? null,
         dueBy: createdTask.dueBy ?? null,
         updatedOn: createdTask.updatedOn ?? null,
+        creator,
       },
     });
   } catch (err) {
@@ -62,7 +65,7 @@ exports.getAllTasks = async (req, res) => {
     const tasks = await Task.find()
       .skip(skip)
       .limit(size)
-      .sort({ createdAt: 1 }); // optional sorting
+      .sort({ createdAt: -1 }); // optional sorting
 
     // Get total count
     const totalCount = await Task.countDocuments();
@@ -74,6 +77,7 @@ exports.getAllTasks = async (req, res) => {
       createdAt: task.createdAt,
       dueBy: task.dueBy,
       updatedOn: task.updatedOn,
+      creator: task.creator ?? null,
     }));
 
     res.status(200).json({
@@ -107,7 +111,7 @@ exports.updateTask = async (req, res) => {
       updatedOn: req.body.updatedOn,
     };
 
-    await Task.updateOne({ _id: req.params.id }, task);
+    await Task.updateOne({ _id: req.params.id}, task);
 
     res.status(200).json({ message: 'Task updated successfully' });
   } catch {
@@ -117,8 +121,18 @@ exports.updateTask = async (req, res) => {
 
 exports.deleteTask = async (req, res) => {
   try {
-    await Task.deleteOne({ _id: req.params.id });
-    res.status(200).json({ message: 'Task deleted' });
+    const result = await Task.deleteOne({ 
+      _id: req.params.id, 
+      creator: req.userData.userId 
+    });
+
+    if (result.deletedCount > 0) {
+      res.status(200).json({ message: 'Task deleted successfully' });
+    } else {
+      // If 0 tasks were deleted, it's usually because the 'creator' didn't match
+      res.status(401).json({ message: 'Not authorized or task not found!' });
+    }
+
   } catch {
     res.status(500).json({ message: 'Deleting task failed' });
   }

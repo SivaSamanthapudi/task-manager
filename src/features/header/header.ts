@@ -14,16 +14,12 @@ export class HeaderComponent {
   isUserLoggedIn: boolean;
 
   constructor(
-    private router: Router,
     public authService: AuthService,
-    private sharedService: SharedService,
   ) {}
 
   ngOnInit(): void {}
 
   onLogout() {
-    this.authService.setAuthToken(null);
-    this.router.navigateByUrl('/login');
-    this.sharedService.clearCache();
+    this.authService.logOutUser();
   }
 }

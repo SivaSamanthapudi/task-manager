@@ -11,6 +11,7 @@
           <a class="nav-link" routerLinkActive="active-link" routerLink="/home">Home</a>
         </li>
         @if(authService.isLoggedIn()) {
+
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/posts">Posts</a>
         </li>
@@ -25,6 +26,7 @@
 
       <ul class="navbar-nav ms-auto">
         @if(!authService.isLoggedIn()) {
+
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/login">Login</a>
         </li>
@@ -32,6 +34,9 @@
           <a class="nav-link" routerLinkActive="active-link" routerLink="/register">Signup</a>
         </li>
         } @else {
+        <li class="nav-item">
+          <a class="nav-link"  routerLink="/home">Welcome, {{ authService.getLoggedUserInfo() }}!</a>
+        </li>
         <li class="nav-item d-flex align-items-center">
           <button class="btn btn-outline-danger btn-sm" (click)="onLogout()">
             Logout
