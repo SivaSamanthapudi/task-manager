@@ -1,0 +1,90 @@
+@if (posts().length > 0) {
+  <div class="accordion" id="postsAccordion">
+
+    @for (post of posts(); track post.id; let i = $index) {
+      <div class="accordion-item">
+
+        <h2 class="accordion-header" [id]="'heading' + i">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            [attr.data-bs-target]="'#collapse' + i"
+          >
+            {{ post.title }}
+          </button>
+        </h2>
+
+        <div
+          [id]="'collapse' + i"
+          class="accordion-collapse collapse"
+          data-bs-parent="#postsAccordion"
+        >
+          <div class="accordion-body">
+            <p>{{ post.content }}</p>
+
+            <div class="d-flex justify-content-end gap-2">
+              <button
+                class="btn btn-primary btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#editPostModal"
+                (click)="onEdit(post)"
+              >
+                EDIT
+              </button>
+
+              <button
+                class="btn btn-danger btn-sm"
+                (click)="onDelete(post.id)"
+              >
+                DELETE
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    }
+
+  </div>
+} @else {
+  <p class="text-muted text-center mt-3">
+    No posts added yet!
+  </p>
+}
+
+
+<div class="modal fade" id="editPostModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Post</h5>
+        <button class="btn-close" data-bs-dismiss="modal" (click)="onDismiss()"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" [(ngModel)]="editedPost.title" name="title">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Content</label>
+          <textarea class="form-control" rows="4" [(ngModel)]="editedPost.content" name="content"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="onDismiss()">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary" (click)="onUpdate()" data-bs-dismiss="modal">
+          Save
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

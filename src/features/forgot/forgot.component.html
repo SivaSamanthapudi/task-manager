@@ -1,0 +1,36 @@
+<main class="container col-md-6 offset-md-3 mt-5 p-3 mx-auto border-dark shadow rounded-2">
+
+
+    <form (submit)="onForgot(forgotForm)" #forgotForm="ngForm" novalidate>
+
+        <div class="form-group">
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="forgot" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    Forgot Username
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="forgot" id="flexRadioDefault2">
+                <label class="form-check-label" for="flexRadioDefault2">
+                    Forgot Password
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" ngModel name="email" aria-describedby="emailHelp"
+                placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" ngModel name="password" placeholder="Password">
+        </div>
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary ">Update</button>
+        </div>
+    </form>
+
+</main>

@@ -1,0 +1,7 @@
+@if (!authService.isLoggedIn()) {
+<app-login> </app-login>
+}
+@if(authService.isLoggedIn()) {
+<!-- <app-signup></app-signup> -->
+ Welcome, {{ authService.getLoggedUserInfo() }}!
+}

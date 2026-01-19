@@ -1,0 +1,17 @@
+<form (submit)="onAddPost(postForm)" #postForm="ngForm" novalidate>
+  <div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label">Title:</label>
+    <input type="email" #title="ngModel" name="title" ngModel required minlength="3" class="form-control"
+      id="exampleFormControlInput1">
+  </div>
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label">Description:</label>
+    <textarea class="form-control" rows="6" name="content" ngModel required #content="ngModel"
+      id="exampleFormControlTextarea1" rows="6"></textarea>
+  </div>
+  <div class="text-center">
+
+    <button type="submit" [disabled]="postForm.invalid" class="btn btn-primary">Save</button>
+  </div>
+
+</form>

@@ -1,0 +1,20 @@
+const jwt = require('jsonwebtoken');
+const { SECRET_KEY } = require('../utils/constants');
+
+
+module.exports = (req, res, next) => {
+  try {
+    // Header format: "Bearer <token>"
+    const token = req.headers.authorization.split(" ")[1];
+    
+    // Verify the token
+    const decodedToken = jwt.verify(token, SECRET_KEY);
+    
+    // Attach user data to the request object so routes can use it
+    req.userData = { email: decodedToken.email, userId: decodedToken.userId };
+    
+    next(); // Move to the next function (the controller)
+  } catch (error) {
+    res.status(401).json({ message: "You are not authenticated!" });
+  }
+};

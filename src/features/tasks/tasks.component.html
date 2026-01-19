@@ -1,0 +1,20 @@
+<div class="tasks-feed col-md-8 mx-auto">
+    <div class="row align-items-end mb-3">
+        <div class="col">
+            <h3 class="fw-bold">Tasks</h3>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-secondary shadow-sm" (click)="onAddTask()">
+                + Add Task
+            </button>
+        </div>
+    </div>
+
+    @if (isModalOpen) {
+      <app-task-create (close)="closeModal()"></app-task-create>
+    }
+    
+    <div class="card border-0 shadow-sm">
+        <app-task-list></app-task-list>
+    </div>
+</div>
