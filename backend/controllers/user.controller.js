@@ -1,5 +1,5 @@
 const User = require('../models/user.model');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { simplifiedErrors } = require('../utils/helper');
 const { VALIDATION_ERROR, SECRET_KEY } = require('../utils/constants');
 const { TOKEN_EXPIRY_TIME } = require('../config/config');

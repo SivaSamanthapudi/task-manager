@@ -69,3 +69,12 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Deployed on:
+
+http://s3-angular-bucket-nodejs-task-manager.s3-website.eu-north-1.amazonaws.com/tasks
+
+
+## Backend Running on:
+
+http://task-manager.eu-north-1.elasticbeanstalk.com/[api/{{posts}}]
