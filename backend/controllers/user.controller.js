@@ -11,15 +11,16 @@ exports.register = async (req, res) => {
     const createdUser = await user.save();
     res.status(201).json({
       message: 'User registered successfully',
+      code: 'REGISTRATION_SUCCESS',
       user: { id: createdUser._id, email: createdUser.email },
-      registered: true
+      registered: true,
     });
   } catch (err) {
     if (err.code === 11000) return res.status(409).json({ code: 'EMAIL_REGISTERED_ALREADY' });
     if (err.name === VALIDATION_ERROR) {
       return res.status(422).json({ errors: simplifiedErrors(err.errors) });
     }
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Internal server error', code: 'INTERNAL_SERVER_ERROR' });
   }
 };
 
@@ -29,8 +30,18 @@ exports.login = async (req, res) => {
     // Note: We use .select('+password') because we set select:false in the model
     const user = await User.findOne({ email }).select('+password');
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: 'Invalid credentials', code: 'AUTH_FAILED' });
+    if (!user) {
+      return res.status(401).json({
+        message: 'No account found with this email. Please sign up first.',
+        code: 'USER_EMAIL_NOT_FOUND',
+      });
+    }
+
+    if (user && !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({
+        message: 'Login Failed!! Invalid credentials',
+        code: 'INVALID_CREDENTIALS',
+      });
     }
 
     const token = jwt.sign(
@@ -41,13 +52,14 @@ exports.login = async (req, res) => {
 
     res.status(200).json({
       message: 'Login successful',
+      code: 'LOGIN_SUCCESS',
       token: token,
       expiresIn: 3600, // Tell the frontend it lasts 3600 seconds
       user: { id: user._id, firstName: user.firstName },
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Login failed' });
+    res.status(500).json({ code: 'LOGIN_FAILED', message: 'Login failed' });
   }
 };
 
@@ -57,9 +69,10 @@ exports.getAllUsers = async (req, res) => {
     res.status(200).json({
       message: 'Users fetched successfully',
       users,
+      code: 'USER_FETCH_SUCCESS',
     });
   } catch (err) {
-    res.status(500).json({ message: 'Fetching users failed' });
+    res.status(500).json({ code: 'USER_FETCH_FAILED', message: 'Fetching users failed' });
   }
 };
 
@@ -78,17 +91,17 @@ exports.updateUser = async (req, res) => {
     // so we use findOne and then save as we are working with hashing password in pre-save hook
     //      await User.updateOne({ _id: req.params.id }, user).save();
     await User.findOne({ _id: req.params.id }, user).save();
-    res.status(200).json({ message: 'User updated successfully' });
+    res.status(200).json({ code: 'USER_UPDATE_SUCCESS', message: 'User updated successfully' });
   } catch {
-    res.status(500).json({ message: 'Updating user failed' });
+    res.status(500).json({ code: 'USER_UPDATE_FAILED', message: 'Updating user failed' });
   }
 };
 
 exports.deleteUser = async (req, res) => {
   try {
     await User.deleteOne({ _id: req.params.id });
-    res.status(200).json({ message: 'User deleted' });
+    res.status(200).json({ code: 'USER_DELETE_SUCCESS', message: 'User deleted' });
   } catch {
-    res.status(500).json({ message: 'Deleting user failed' });
+    res.status(500).json({ code: 'USER_DELETE_FAILED', message: 'Deleting user failed' });
   }
 };

@@ -1,15 +1,24 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
   selector: 'app-pagination',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.scss',
 })
-export class PaginationComponent {
-  @Input() totalItems: number;
+export class PaginationComponent implements OnChanges, AfterViewInit {
+  @Input() totalItems: number = 0;
   @Input() itemsPerPage: number = 5;
-  @Input() currentPage: number;
+  @Input() currentPage: number = 1;
   pageNumbers: number[] = [];
   totalPages: number;
 
@@ -17,9 +26,29 @@ export class PaginationComponent {
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      (changes['totalItems'] && this.totalItems > 0) ||
+      (changes['itemsPerPage'] && this.itemsPerPage > 0)
+    ) {
+      this.buildPageNumbers();
+    }
+  }
+
+  ngAfterViewInit(): void {
     this.buildPageNumbers();
-    this.currentPage = 1;
+  }
+
+  buildPageNumbers() {
+    const total = Number(this.totalItems);
+    const perPage = Number(this.itemsPerPage);
+
+    if (perPage <= 0) return;
+
+    this.totalPages = Math.ceil(total / perPage);
+
+    this.pageNumbers =
+      this.totalPages > 0 ? Array.from({ length: this.totalPages }, (_, i) => i + 1) : [];
   }
 
   onSelectPage(pageNumber: number) {
@@ -27,19 +56,17 @@ export class PaginationComponent {
     this.pageChange.emit(this.currentPage);
   }
 
-  buildPageNumbers() {
-    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
-    this.pageNumbers= Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
   onNextPage() {
-    this.currentPage += 1;
-    this.pageChange.emit(this.currentPage);
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.pageChange.emit(this.currentPage);
+    }
   }
 
   onPreviousPage() {
-    this.currentPage -= 1;
-    this.pageChange.emit(this.currentPage);
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.pageChange.emit(this.currentPage);
+    }
   }
-
 }

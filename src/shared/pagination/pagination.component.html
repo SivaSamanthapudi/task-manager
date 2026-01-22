@@ -3,9 +3,8 @@
         <li class="page-item"><a class="page-link" (click)="onPreviousPage()"
                 [class.disabled]="currentPage==1">Previous</a>
         </li>
-        @for(pageNumber of pageNumbers; track pageNumber; let i=$index) {
-        <li class="page-item"><a class="page-link" (click)="onSelectPage(pageNumber)">{{pageNumber}}</a></li>
-        }
+        <li class="page-item" *ngFor="let pageNumber of pageNumbers"><a class="page-link"
+                (click)="onSelectPage(pageNumber)">{{pageNumber}}</a></li>
         <li class="page-item"><a class="page-link" (click)="onNextPage()"
                 [class.disabled]="currentPage==totalPages">Next</a>
         </li>

@@ -3,6 +3,7 @@ import { LoginComponent } from '../login/login.component';
 import { SignupComponent } from '../signup/signup.component';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -13,12 +14,15 @@ import { UserService } from '../../services/user.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   constructor(
+    private router: Router,
     public authService: AuthService,
-    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
     this.authService.autoLogin();
+    if(!this.authService.isLoggedIn()){
+      this.router.navigate(['/login']);
+    }
   }
 
   ngOnDestroy(): void {}

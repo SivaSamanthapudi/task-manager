@@ -1,7 +1,11 @@
-@if (!authService.isLoggedIn()) {
-<app-login> </app-login>
-}
-@if(authService.isLoggedIn()) {
-<!-- <app-signup></app-signup> -->
- Welcome, {{ authService.getLoggedUserInfo() }}!
-}
+<div class="col-md-12 mx-auto">
+    @if (!authService.isLoggedIn()) {
+    <app-login> </app-login>
+    }
+    @if(authService.isLoggedIn()) {
+    <!-- <app-signup></app-signup> -->
+    <div>
+        Welcome, {{ authService.getLoggedUserInfo() }}!
+    </div>
+    }
+</div>

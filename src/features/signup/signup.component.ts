@@ -3,6 +3,7 @@ import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ToasterService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-signup',
@@ -17,7 +18,7 @@ export class SignupComponent {
 
   registerForm: FormGroup;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private toasterService: ToasterService) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -61,16 +62,13 @@ export class SignupComponent {
         this.navigateToLogin();
       },
       (error) => {
-        console.error('Error registering user:', error);
         this.handleRegistrationError(error);
       },
     );
   }
 
   handleRegistrationError(error: any) {
-    if (error.error && error.error.code === 'EMAIL_REGISTERED_ALREADY') {
-      alert('This email is already registered. Please use a different email.');
-    }
+   
   }
 
   navigateToLogin() {

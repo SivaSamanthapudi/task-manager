@@ -12,6 +12,7 @@ exports.addPost = async (req, res) => {
 
     res.status(201).json({
       message: 'Post added successfully',
+      code: 'POST_ADD_SUCCESS',
       post: {
         id: createdPost._id,
         title: createdPost.title,
@@ -19,23 +20,31 @@ exports.addPost = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ message: 'Creating post failed' });
+    res.status(500).json({ code: 'POST_ADD_FAILED', message: 'Creating post failed' });
   }
 };
 
 exports.getAllPosts = async (req, res) => {
-  const posts = await Post.find();
-  posts.map((post) => ({
-    id: post._id,
-    title: post.title,
-    content: post.content,
-    createdAt: post.createdAt,
-  }));
+  try {
+    const posts = await Post.find();
+    posts.map((post) => ({
+      id: post._id,
+      title: post.title,
+      content: post.content,
+      createdAt: post.createdAt,
+    }));
 
-  res.status(200).json({
-    message: 'Posts fetched successfully',
-    posts,
-  });
+    res.status(200).json({
+      message: 'Posts fetched successfully',
+      code: 'POST_FETCH_SUCCESS',
+      posts,
+    });
+  } catch {
+    res.status(500).json({
+      code: 'POST_FETCH_FAILED',
+      message: 'Post fetching failed',
+    });
+  }
 };
 
 exports.editPost = async (req, res) => {
@@ -49,17 +58,29 @@ exports.editPost = async (req, res) => {
 
     await Post.updateOne({ _id: req.params.id }, post);
 
-    res.status(200).json({ message: 'Post updated successfully' });
+    res.status(200).json({
+      code: 'POST_UPDATE_SUCCESS',
+      message: 'Post updated successfully',
+    });
   } catch {
-    res.status(500).json({ message: 'Updating post failed' });
+    res.status(500).json({
+      code: 'POST_UPDATE_FAILED',
+      message: 'Updating post failed',
+    });
   }
 };
 
 exports.deletePost = async (req, res) => {
   try {
     await Post.deleteOne({ _id: req.params.id });
-    res.status(200).json({ message: 'Post deleted' });
+    res.status(200).json({
+      message: 'Post deleted successfully',
+      code: 'POST_DELETE_SUCCESS',
+    });
   } catch {
-    res.status(500).json({ message: 'Deleting post failed' });
+    res.status(500).json({
+      code: 'POST_DELETE_FAILED',
+      message: 'Deleting post failed',
+    });
   }
 };

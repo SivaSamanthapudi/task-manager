@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
-import { POSTS_API_URL } from '../constants/constants';
+import { POSTS_API_URL } from '../utils/constants/url.constants';
 import { Post } from '../models/post.model';
 
 @Injectable({ providedIn: 'root' })

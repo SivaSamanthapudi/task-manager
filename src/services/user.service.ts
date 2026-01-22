@@ -1,4 +1,4 @@
-import { USER_API_URL } from './../constants/constants';
+import { USER_API_URL } from '../utils/constants/url.constants';
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 

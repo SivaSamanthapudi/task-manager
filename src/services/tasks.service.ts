@@ -2,7 +2,7 @@ import { computed, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
-import { TASKS_API_URL } from '../constants/constants';
+import { TASKS_API_URL } from '../utils/constants/url.constants';
 import { Task } from '../models/task.model';
 
 @Injectable({ providedIn: 'root' })

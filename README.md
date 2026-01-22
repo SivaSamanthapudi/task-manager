@@ -73,6 +73,7 @@ For more information on using the Angular CLI, including detailed command refere
 ## Deployed on:
 
 http://s3-angular-bucket-nodejs-task-manager.s3-website.eu-north-1.amazonaws.com/tasks
+http://task-manager-x.s3-website.eu-north-1.amazonaws.com/
 
 
 ## Backend Running on:

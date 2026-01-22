@@ -1,5 +1,5 @@
 @if (tasks().length > 0) {
-<div class="container">
+<div class="m-3">
   <div class="row g-3"> <!-- IMPORTANT -->
 
     @for (task of tasks(); track task.id; let i = $index) {
@@ -40,7 +40,8 @@
 
   </div>
   <div class="mt-4">
-    <app-pagination [totalItems]="totalTasks" [itemsPerPage]="5" (pageChange)="onPageChanged($event)">
+    <app-pagination *ngIf="totalTasks" [totalItems]="totalTasks" [itemsPerPage]="5"
+      (pageChange)="onPageChanged($event)">
     </app-pagination>
   </div>
 

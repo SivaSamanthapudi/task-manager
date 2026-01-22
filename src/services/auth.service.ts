@@ -1,6 +1,6 @@
 import { Injectable, signal, Signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { USER_API_URL } from '../constants/constants';
+import { USER_API_URL } from '../utils/constants/url.constants';
 import { Route, Router } from '@angular/router';
 import { SharedService } from './shared.service';
 import { UserService } from './user.service';
