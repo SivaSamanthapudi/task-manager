@@ -7,37 +7,38 @@ import { TasksService } from '../../../services/tasks.service';
 import { Task } from '../../../models/task.model';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 import { UserService } from '../../../services/user.service';
+import { TaskCreateComponent } from '../task-create/task-create.component';
+import { ITEMS_PER_PAGE } from '../../../utils/constants/constants';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginationComponent],
+  imports: [CommonModule, FormsModule, PaginationComponent, TaskCreateComponent],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent {
   private taskService = inject(TasksService);
   tasks: Signal<Task[]> = this.taskService.tasks;
-  editedTask: Task = {} as Task;
-  itemsPerPage: number = 5;
-  totalTasks: number;
+  totalCount: Signal<number> = this.taskService.totalCount;
+  selectedTask: Task = {} as Task;
+  itemsPerPage: number = ITEMS_PER_PAGE;
+  showModal: boolean;
 
   constructor(public userService: UserService) {}
 
   ngOnInit() {
     this.taskService.getTasks();
     this.userService.getUsers();
-    this.totalTasks = this.taskService.totalCount();
   }
 
-
   onEdit(task: Task) {
-    this.editedTask = { ...task, dueBy: this.formatDateForInput(task.dueBy) };
-    console.log(this.editedTask);
+    this.selectedTask = { ...task, dueBy: this.formatDateForInput(task.dueBy) };
+    this.showModal = true;
   }
 
   formatDateForInput(date: string | Date): string {
-    if(!date){
+    if (!date) {
       return null;
     }
     const d = new Date(date);
@@ -46,12 +47,8 @@ export class TaskListComponent {
   }
 
   onDismiss() {
-    this.editedTask = {} as Task;
-  }
-
-  onUpdate() {
-    this.editedTask = { ...this.editedTask, updatedOn: new Date() };
-    this.taskService.updateTask(this.editedTask);
+    this.selectedTask = {} as Task;
+    this.showModal = false;
   }
 
   onDelete(id: string) {
@@ -59,7 +56,6 @@ export class TaskListComponent {
   }
 
   onPageChanged(event: any) {
-    console.log(event);
     const pageNumber = event;
     this.taskService.getTasks(pageNumber, this.itemsPerPage);
   }

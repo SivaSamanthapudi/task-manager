@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { TasksService } from '../../../services/tasks.service';
+import { Task } from '../../../models/task.model';
 
 @Component({
   selector: 'app-task-create',
@@ -13,12 +14,29 @@ import { TasksService } from '../../../services/tasks.service';
 })
 export class TaskCreateComponent {
   @Output() close = new EventEmitter<void>();
+  @Input() isEdit = false;
+  @Input() task: Task = {
+    title: '',
+    description: '',
+    updatedOn: null,
+    dueBy: '',
+    createdAt: null,
+  };
 
   constructor(public taskService: TasksService) {}
 
-  onAddTask(form: NgForm) {
-    this.taskService.addTask(form.value.title, form.value.description, null, form.value.dueBy);
+  onSave(form: NgForm) {
+    if (this.isEdit) {
+      const selectedTask = { ...this.task, updatedOn: new Date() };
+      this.taskService.updateTask(selectedTask);
+    } else {
+      this.taskService.addTask(this.task.title, this.task.description, null, this.task.dueBy);
+    }
     form.resetForm();
     this.close.emit();
+  }
+
+  reset(taskForm: NgForm) {
+    taskForm.reset();
   }
 }

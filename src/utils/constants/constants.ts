@@ -6,3 +6,5 @@ export const STATUS_CONFIG = {
   unauthorised: { message: 'Unauthorised!!', class: 'error' },
   warning: { message: 'Error!!', class: 'warning' },
 } as const;
+
+export const ITEMS_PER_PAGE = 5;

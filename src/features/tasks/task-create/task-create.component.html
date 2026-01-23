@@ -4,30 +4,30 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Add Task</h5>
+        <h5 class="modal-title">{{isEdit ? 'Edit Task':'Add Task'}}</h5>
         <button type="button" class="btn-close" (click)="close.emit()"></button>
       </div>
       <div class="modal-body">
 
-        <form (submit)="onAddTask(postForm)" #postForm="ngForm" novalidate>
+        <form (submit)="onSave(taskForm)" #taskForm="ngForm" novalidate>
           <div class="mb-3">
             <label for="title" class="form-label">Title:</label>
-            <input type="text" name="title" ngModel required minlength="3" class="form-control"
+            <input type="text" name="title" [(ngModel)]="task.title" required minlength="3" class="form-control"
               id="title">
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Description:</label>
-            <textarea class="form-control" rows="4" name="description" ngModel required #content="ngModel"
-              id="description" rows="3"></textarea>
+            <textarea class="form-control" rows="4" name="description" [(ngModel)]="task.description" required
+              #content="ngModel" id="description" rows="3"></textarea>
           </div>
           <div class="mb-3">
             <label for="dueBy" class="form-label">Due by:</label>
-            <input type="date" name="dueBy" ngModel required minlength="3" class="form-control"
+            <input type="date" name="dueBy" [(ngModel)]="task.dueBy" required minlength="3" class="form-control"
               id="dueBy">
           </div>
-          <div class="text-center">
-
-            <button type="submit" class="btn btn-success ">Save</button>
+          <div class="text-center d-flex justify-content-center gap-4 mt-3">
+            <button type="submit" class="btn btn-primary g-3">{{isEdit ? 'Update':'Save'}}</button>
+            <button type="reset" class="btn btn-danger" (click)="reset(taskForm)">Reset</button>
           </div>
 
         </form>

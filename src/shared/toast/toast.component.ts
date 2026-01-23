@@ -26,7 +26,6 @@ export class ToastComponent {
     this.title = errorInfo.message;
     this.type = errorInfo.type;
     this.status = this.getStatusMessage(this.type);
-    console.log('this.errorInfo', errorInfo);
   }
 
   getStatusMessage(type: ERROR_TYPE): string {
@@ -40,7 +39,7 @@ export class ToastComponent {
     // Fallback for safety
     return 'Unknown Status';
   }
-  
+
   onClose() {
     this.toastService.closeToaster();
   }

@@ -10,33 +10,45 @@ export class TasksService {
   private _tasks = signal<{ tasks: Task[]; count: number }>({ tasks: [], count: 0 });
   tasks = computed(() => this._tasks().tasks);
   totalCount = computed(() => this._tasks().count);
+  private taskCache = new Map<string, { tasks: any[]; count: number }>();
 
   constructor(private http: HttpClient) {}
 
   getTasks(pageNumber: number = 1, pageSize: number = 5) {
+    const cacheKey = `${pageNumber}_${pageSize}`;
+
+    if (this.taskCache.has(cacheKey)) {
+      const cachedData = this.taskCache.get(cacheKey)!;
+      this._tasks.set(cachedData);
+      return;
+    }
+
     const GET_TASKS_API_URL = `${TASKS_API_URL}?page=${pageNumber}&size=${pageSize}`;
+
     this.http
       .get<{ message: string; tasks: any[]; count: number }>(GET_TASKS_API_URL)
       .pipe(
-        map((res) => {
-          return {
-            count: res.count,
-            tasks: res.tasks.map((p) => ({
-              id: p.id,
-              title: p.title,
-              description: p.description,
-              createdAt: new Date(p.createdAt),
-              updatedOn: p.updatedOn ? new Date(p.updatedOn) : null,
-              dueBy: p.dueBy ? new Date(p.dueBy) : null,
-              creator: p.creator ?? null
-            })),
-          };
-        }),
+        map((res) => ({
+          count: res.count,
+          tasks: res.tasks.map((p) => ({
+            id: p.id,
+            title: p.title,
+            description: p.description,
+            createdAt: new Date(p.createdAt),
+            updatedOn: p.updatedOn ? new Date(p.updatedOn) : null,
+            dueBy: p.dueBy ? new Date(p.dueBy) : null,
+            creator: p.creator ?? null,
+          })),
+        })),
       )
-      .subscribe((data) => this._tasks.set({ tasks: data.tasks, count: data.count }));
+      .subscribe((data) => {
+        // 💾 Save to cache
+        this.taskCache.set(cacheKey, data);
+        this._tasks.set(data);
+      });
   }
 
-  addTask(title: string, description: string, updatedOn: Date | null, dueBy: Date | null) {
+  addTask(title: string, description: string, updatedOn: Date | null, dueBy: Date | null | string) {
     const task: Task = {
       title,
       description,
@@ -45,35 +57,33 @@ export class TasksService {
       dueBy: dueBy ?? null,
     };
 
-    this.http.post<{ message: string; task: Task }>(TASKS_API_URL, task).subscribe((res) =>
-      this._tasks.update((state) => ({
-        tasks: [...state.tasks, res.task],
-        count: state.count + 1,
-      })),
-    );
+    this.http.post<{ message: string; task: Task }>(TASKS_API_URL, task).subscribe(() => {
+      this.clearTaskCache();
+      this.getTasks(1, 5);
+    });
   }
 
   updateTask(task: Task) {
     const updatedTask: Task = task;
 
     this.http.put(`${TASKS_API_URL}/${updatedTask.id}`, updatedTask).subscribe(() => {
-      this._tasks.update((state) => ({
-        ...state, // Spread the state to keep the 'count' intact
-        tasks: state.tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
-      }));
+      this.clearTaskCache();
+      this.getTasks(1, 5);
     });
   }
 
   deleteTask(id: string) {
     this.http.delete(`${TASKS_API_URL}/${id}`).subscribe(() => {
-      this._tasks.update((state) => ({
-        tasks: state.tasks.filter((t) => t.id !== id),
-        count: state.count - 1, // Keep the count accurate
-      }));
+      this.clearTaskCache();
+      this.getTasks(1, 5);
     });
   }
 
   clearTasksCache() {
     this._tasks.set({ tasks: [], count: 0 });
+  }
+
+  clearTaskCache() {
+    this.taskCache.clear();
   }
 }

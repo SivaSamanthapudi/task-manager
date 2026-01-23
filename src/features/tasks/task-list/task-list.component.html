@@ -1,7 +1,6 @@
 @if (tasks().length > 0) {
 <div class="m-3">
-  <div class="row g-3"> <!-- IMPORTANT -->
-
+  <div class="row g-3">
     @for (task of tasks(); track task.id; let i = $index) {
     <div class="col-12 col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm">
@@ -40,13 +39,12 @@
 
   </div>
   <div class="mt-4">
-    <app-pagination *ngIf="totalTasks" [totalItems]="totalTasks" [itemsPerPage]="5"
+    <app-pagination [totalItems]="totalCount()" [itemsPerPage]="5"
       (pageChange)="onPageChanged($event)">
     </app-pagination>
   </div>
 
 </div>
-
 
 } @else {
 <div class="text-center py-5">
@@ -54,44 +52,6 @@
 </div>
 }
 
-
-
-<div class="modal fade" id="editPostModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Edit Task</h5>
-        <button class="btn-close" data-bs-dismiss="modal" (click)="onDismiss()"></button>
-      </div>
-
-      <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label">Title</label>
-          <input type="text" class="form-control" [(ngModel)]="editedTask.title" name="title">
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Content</label>
-          <textarea class="form-control" rows="4" [(ngModel)]="editedTask.description" name="description"></textarea>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Due by: </label>
-          <input type="date" class="form-control" [(ngModel)]="editedTask.dueBy" name="title">
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">
-          Cancel
-        </button>
-
-        <button class="btn btn-primary" (click)="onUpdate()" data-bs-dismiss="modal">
-          Save
-        </button>
-      </div>
-
-    </div>
-  </div>
-</div>
+@if (showModal) {
+<app-task-create (close)="onDismiss()" [task]="selectedTask" [isEdit]="true"></app-task-create>
+}
