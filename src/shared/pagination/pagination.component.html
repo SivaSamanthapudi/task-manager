@@ -1,12 +1,29 @@
-<nav aria-label="Page navigation example">
-    <ul class="pagination">
-        <li class="page-item"><a class="page-link" (click)="onPreviousPage()"
-                [class.disabled]="currentPage==1">Previous</a>
-        </li>
-        <li class="page-item" *ngFor="let pageNumber of pageNumbers"><a class="page-link"
-                (click)="onSelectPage(pageNumber)">{{pageNumber}}</a></li>
-        <li class="page-item"><a class="page-link" (click)="onNextPage()"
-                [class.disabled]="currentPage==totalPages">Next</a>
-        </li>
-    </ul>
+<nav class="d-flex align-items-center gap-3">
+
+        <ul class="pagination mb-0">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a class="page-link" (click)="onPreviousPage()">Previous</a>
+                </li>
+
+                <li class="page-item" *ngFor="let pageNumber of pageNumbers"
+                        [class.active]="pageNumber === currentPage">
+                        <a class="page-link" (click)="onSelectPage(pageNumber)">
+                                {{ pageNumber }}
+                        </a>
+                </li>
+
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <a class="page-link" (click)="onNextPage()">Next</a>
+                </li>
+        </ul>
+
+        <div class="d-flex align-items-center pagination mb-0">
+                <select class="form-select form-select-sm w-auto page-item" name="itemsPerPage" [ngModel]="itemsPerPage"
+                        (ngModelChange)="onPageCountChange($event)">
+                        <option *ngFor="let count of itemsPerPageArray" [value]="count">
+                                {{ count }}
+                        </option>
+                </select>
+        </div>
+
 </nav>

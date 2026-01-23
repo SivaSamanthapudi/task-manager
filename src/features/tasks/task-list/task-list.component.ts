@@ -24,11 +24,12 @@ export class TaskListComponent {
   selectedTask: Task = {} as Task;
   itemsPerPage: number = ITEMS_PER_PAGE;
   showModal: boolean;
+  currentPageNumber = 1;
 
   constructor(public userService: UserService) {}
 
   ngOnInit() {
-    this.taskService.getTasks();
+    this.taskService.getTasks(this.currentPageNumber, this.itemsPerPage);
     this.userService.getUsers();
   }
 
@@ -56,7 +57,12 @@ export class TaskListComponent {
   }
 
   onPageChanged(event: any) {
-    const pageNumber = event;
-    this.taskService.getTasks(pageNumber, this.itemsPerPage);
+    this.currentPageNumber = event;
+    this.taskService.getTasks(this.currentPageNumber, this.itemsPerPage);
+  }
+
+  onCountChange(event){
+    this.itemsPerPage = event;
+    this.taskService.getTasks(this.currentPageNumber, this.itemsPerPage);
   }
 }

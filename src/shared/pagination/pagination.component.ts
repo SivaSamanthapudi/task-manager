@@ -8,10 +8,11 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-pagination',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.scss',
 })
@@ -20,8 +21,10 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
   @Input() itemsPerPage: number = 5;
   @Input() currentPage: number = 1;
   pageNumbers: number[] = [];
+  itemsPerPageArray = [5,10,20];
   totalPages: number;
-
+  
+  @Output() pageCountChange = new EventEmitter<number>();
   @Output() pageChange = new EventEmitter<number>();
 
   constructor() {}
@@ -68,5 +71,11 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
       this.currentPage--;
       this.pageChange.emit(this.currentPage);
     }
+  }
+
+  onPageCountChange(event: any){
+    this.itemsPerPage = event;
+    this.pageCountChange.emit(event);
+    this.buildPageNumbers();
   }
 }
