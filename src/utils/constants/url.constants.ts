@@ -1,4 +1,4 @@
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.development';
 
 export const BACKEND_URL = environment.apiUrl;
 export const POSTS_API_URL = `${BACKEND_URL}posts`;
