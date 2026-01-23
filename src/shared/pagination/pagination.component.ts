@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -12,70 +11,66 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-pagination',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.scss',
 })
-export class PaginationComponent implements OnChanges, AfterViewInit {
+export class PaginationComponent implements OnChanges {
+
   @Input() totalItems: number = 0;
   @Input() itemsPerPage: number = 5;
   @Input() currentPage: number = 1;
-  pageNumbers: number[] = [];
-  itemsPerPageArray = [5,10,20];
-  totalPages: number;
-  
-  @Output() pageCountChange = new EventEmitter<number>();
-  @Output() pageChange = new EventEmitter<number>();
 
-  constructor() {}
+  @Output() pageChange = new EventEmitter<number>();
+  @Output() pageCountChange = new EventEmitter<number>();
+
+  pageNumbers: number[] = [];
+  itemsPerPageArray = [5, 10, 15, 20];
+  totalPages: number = 0;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (
-      (changes['totalItems'] && this.totalItems > 0) ||
-      (changes['itemsPerPage'] && this.itemsPerPage > 0)
-    ) {
+    if (changes['totalItems'] || changes['itemsPerPage']) {
       this.buildPageNumbers();
     }
   }
 
-  ngAfterViewInit(): void {
-    this.buildPageNumbers();
-  }
-
   buildPageNumbers() {
-    const total = Number(this.totalItems);
-    const perPage = Number(this.itemsPerPage);
+    if (this.itemsPerPage <= 0) return;
 
-    if (perPage <= 0) return;
+    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
 
-    this.totalPages = Math.ceil(total / perPage);
+    this.pageNumbers = this.totalPages
+      ? Array.from({ length: this.totalPages }, (_, i) => i + 1)
+      : [];
 
-    this.pageNumbers =
-      this.totalPages > 0 ? Array.from({ length: this.totalPages }, (_, i) => i + 1) : [];
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
   }
 
-  onSelectPage(pageNumber: number) {
-    this.currentPage = pageNumber;
-    this.pageChange.emit(this.currentPage);
+  onSelectPage(page: number) {
+    if (page === this.currentPage) return;
+    this.currentPage = page;
+    this.pageChange.emit(page);
   }
 
   onNextPage() {
     if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.pageChange.emit(this.currentPage);
+      this.onSelectPage(this.currentPage + 1);
     }
   }
 
   onPreviousPage() {
     if (this.currentPage > 1) {
-      this.currentPage--;
-      this.pageChange.emit(this.currentPage);
+      this.onSelectPage(this.currentPage - 1);
     }
   }
 
-  onPageCountChange(event: any){
-    this.itemsPerPage = event;
-    this.pageCountChange.emit(event);
+   onPageCountChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 1;
+    this.pageCountChange.emit(size);
     this.buildPageNumbers();
   }
 }
