@@ -1,7 +1,7 @@
-// const Task = require('../models/task.model');
 
 import { Task } from '../models/task.model';
 import { Request, Response } from 'express';
+import { VALIDATION_ERROR } from '../utils/constants';
 
 export const addTask = async (req: Request, res: Response) => {
   try {
@@ -45,7 +45,7 @@ export const addTask = async (req: Request, res: Response) => {
     // console.error('Error creating task:', err);
 
     // ✅ Return error details if available
-    if (err.name === 'ValidationError') {
+    if (err.name === VALIDATION_ERROR) {
       return res.status(422).json({
         message: 'Task data validation failed',
         code: 'FIELD_VALIDATIONS_FAILED',

@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const { SECRET_KEY } = require('../utils/constants');
+import { jwt } from 'jsonwebtoken';
+import { SECRET_KEY } from "../utils/constants";
 
 export const checkAuth = (req:any, res:any, next:any) => {
   try {
