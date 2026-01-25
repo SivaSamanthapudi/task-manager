@@ -8,10 +8,10 @@ import { UserService } from './user.service';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private token: string | null = null;
-  user: string;
+  user: string = '';
   private _isLoggedIn = signal<boolean>(false);
   isLoggedIn: Signal<boolean> = this._isLoggedIn.asReadonly();
-  timer: NodeJS.Timeout;
+  timer: NodeJS.Timeout | undefined;
 
   constructor(
     private http: HttpClient,
@@ -23,7 +23,7 @@ export class AuthService {
   setToken(token: string) {
     this.token = `Bearer ${token}`;
     localStorage.setItem('access_token', token);
-    if (token === null) {
+    if (token === '') {
       this._isLoggedIn.set(false);
       return;
     }
@@ -98,7 +98,7 @@ export class AuthService {
 
   logOutUser() {
     this.sharedService.clearCache();
-    this.setToken(null);
+    this.setToken('');
     this._isLoggedIn.set(false);
     this.clearSession();
     if (this.timer) clearTimeout(this.timer);

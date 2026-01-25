@@ -30,7 +30,6 @@ export class TaskListComponent {
 
   ngOnInit() {
     this.taskService.getTasks(this.currentPageNumber, this.itemsPerPage);
-    this.userService.getUsers();
   }
 
   onEdit(task: Task) {

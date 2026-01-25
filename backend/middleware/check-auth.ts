@@ -1,4 +1,4 @@
-import { jwt } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from "../utils/constants";
 
 export const checkAuth = (req:any, res:any, next:any) => {

@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
   imports: [RouterModule, RouterOutlet],
 })
 export class HeaderComponent {
-  isUserLoggedIn: boolean;
+  isUserLoggedIn: boolean = false;
 
   constructor(
     public authService: AuthService,
