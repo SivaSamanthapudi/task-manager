@@ -1,6 +1,7 @@
-const Post = require('../models/post.model');
+import { Post } from '../models/post.model';
+import { Request, Response } from 'express';
 
-exports.addPost = async (req, res) => {
+export const addPost = async (req: Request, res: Response) => {
   try {
     const post = new Post({
       title: req.body.title,
@@ -24,7 +25,7 @@ exports.addPost = async (req, res) => {
   }
 };
 
-exports.getAllPosts = async (req, res) => {
+export const getAllPosts = async (req: Request, res: Response) => {
   try {
     const posts = await Post.find();
     posts.map((post) => ({
@@ -47,7 +48,7 @@ exports.getAllPosts = async (req, res) => {
   }
 };
 
-exports.editPost = async (req, res) => {
+export const editPost = async (req: Request, res: Response) => {
   try {
     const post = {
       _id: req.params.id,
@@ -70,7 +71,7 @@ exports.editPost = async (req, res) => {
   }
 };
 
-exports.deletePost = async (req, res) => {
+export const deletePost = async (req: Request, res: Response) => {
   try {
     await Post.deleteOne({ _id: req.params.id });
     res.status(200).json({

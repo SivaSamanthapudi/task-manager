@@ -23,7 +23,7 @@ export class TaskListComponent {
   totalCount: Signal<number> = this.taskService.totalCount;
   selectedTask: Task = {} as Task;
   itemsPerPage: number = ITEMS_PER_PAGE;
-  showModal: boolean;
+  showModal: boolean = false;
   currentPageNumber = 1;
 
   constructor(public userService: UserService) {}
@@ -38,7 +38,7 @@ export class TaskListComponent {
     this.showModal = true;
   }
 
-  formatDateForInput(date: string | Date): string {
+  formatDateForInput(date: string | Date | null): string | null {
     if (!date) {
       return null;
     }
@@ -61,7 +61,7 @@ export class TaskListComponent {
     this.taskService.getTasks(this.currentPageNumber, this.itemsPerPage);
   }
 
-  onCountChange(event){
+  onCountChange(event: any) {
     this.itemsPerPage = event;
     this.taskService.getTasks(this.currentPageNumber, this.itemsPerPage);
   }

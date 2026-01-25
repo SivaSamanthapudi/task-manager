@@ -4,9 +4,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "strict": false,
-    "noImplicitOverride": true,
+    "noImplicitOverride": false,
     "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -15,19 +15,15 @@
     "target": "ES2022",
     "module": "preserve"
   },
+  "include": ["backend/**/*.ts", "backend/types/express.d.ts"],
+  "exclude": ["backend/**/*.spec.ts"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictInjectionParameters": false,
+    "strictInputAccessModifiers": false,
+    "strictTemplates": false
   },
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    }
-  ]
+  "ts-node": {
+    "esm": true
+  }
 }

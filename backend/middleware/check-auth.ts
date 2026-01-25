@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../utils/constants');
 
-
-module.exports = (req, res, next) => {
+export const checkAuth = (req:any, res:any, next:any) => {
   try {
     // Header format: "Bearer <token>"
     const token = req.headers.authorization.split(" ")[1];

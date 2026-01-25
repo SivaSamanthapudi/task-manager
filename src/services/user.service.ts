@@ -10,8 +10,7 @@ export class UserService {
   private _users = signal<User[]>([]);
   users = this._users.asReadonly();
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   getUsers() {
     this.http
@@ -34,6 +33,7 @@ export class UserService {
   }
 
   getUserNameById(userId: string) {
-    return this.users().find((user)=> user._id == userId).firstName
+    const users = this._users();
+    return users.find((user) => user._id === userId)?.firstName;
   }
 }

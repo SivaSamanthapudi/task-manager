@@ -1,6 +1,9 @@
-const Task = require('../models/task.model');
+// const Task = require('../models/task.model');
 
-exports.addTask = async (req, res) => {
+import { Task } from '../models/task.model';
+import { Request, Response } from 'express';
+
+export const addTask = async (req: Request, res: Response) => {
   try {
     const { title, description, createdAt, dueBy } = req.body;
     const creator = req.userData.userId;
@@ -38,7 +41,7 @@ exports.addTask = async (req, res) => {
         creator,
       },
     });
-  } catch (err) {
+  } catch (err: any) {
     // console.error('Error creating task:', err);
 
     // ✅ Return error details if available
@@ -57,12 +60,13 @@ exports.addTask = async (req, res) => {
   }
 };
 
-exports.getAllTasks = async (req, res) => {
+export const getAllTasks = async (req: Request, res: Response) => {
   try {
-    const page = parseInt(req.query.page, 10) || 1;
-    const size = parseInt(req.query.size, 10) || 5;
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const size = parseInt(req.query.size as string, 10) || 5;
 
     const skip = (page - 1) * size;
+    console.error('req',req);
 
     // Fetch paginated tasks
     const tasks = await Task.find().skip(skip).limit(size).sort({ createdAt: -1 }); // optional sorting
@@ -100,7 +104,7 @@ exports.getAllTasks = async (req, res) => {
   }
 };
 
-exports.updateTask = async (req, res) => {
+export const updateTask = async (req: Request, res: Response) => {
   try {
     const task = {
       // _id: req.params.id,
@@ -119,7 +123,7 @@ exports.updateTask = async (req, res) => {
   }
 };
 
-exports.deleteTask = async (req, res) => {
+export const deleteTask = async (req: Request, res: Response) => {
   try {
     const result = await Task.deleteOne({
       _id: req.params.id,
@@ -130,9 +134,7 @@ exports.deleteTask = async (req, res) => {
       res.status(200).json({ code: 'TASK_DELETE_SUCCESS', message: 'Task deleted successfully' });
     } else {
       // If 0 tasks were deleted, it's usually because the 'creator' didn't match
-      res
-        .status(401)
-        .json({ code: 'UNAUTHORISED', message: 'Not authorized or task not found!' });
+      res.status(401).json({ code: 'UNAUTHORISED', message: 'Not authorized or task not found!' });
     }
   } catch {
     res.status(500).json({ code: 'TASK_DELETE_FAILED', message: 'Deleting task failed' });
