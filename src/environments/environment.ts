@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
+  production: true,  
   apiUrl: 'http://task-manager.eu-north-1.elasticbeanstalk.com/api/'
 };
