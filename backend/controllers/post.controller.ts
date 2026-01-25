@@ -51,7 +51,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
 export const editPost = async (req: Request, res: Response) => {
   try {
     const post = {
-      _id: req.params.id,
+      _id: req.params?.id,
       title: req.body.title,
       content: req.body.content,
       createdAt: req.body.createdAt,

@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { TASKS_API_URL } from '../utils/constants/url.constants';
 import { Task } from '../models/task.model';
+import { ITEMS_PER_PAGE } from '../utils/constants/constants';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
@@ -59,7 +60,7 @@ export class TasksService {
 
     this.http.post<{ message: string; task: Task }>(TASKS_API_URL, task).subscribe(() => {
       this.clearTaskCache();
-      this.getTasks(1, 5);
+      this.getTasks(1, ITEMS_PER_PAGE);
     });
   }
 
@@ -68,14 +69,14 @@ export class TasksService {
 
     this.http.put(`${TASKS_API_URL}/${updatedTask.id}`, updatedTask).subscribe(() => {
       this.clearTaskCache();
-      this.getTasks(1, 5);
+      this.getTasks(1, ITEMS_PER_PAGE);
     });
   }
 
   deleteTask(id: string) {
     this.http.delete(`${TASKS_API_URL}/${id}`).subscribe(() => {
       this.clearTaskCache();
-      this.getTasks(1, 5);
+      this.getTasks(1, ITEMS_PER_PAGE);
     });
   }
 

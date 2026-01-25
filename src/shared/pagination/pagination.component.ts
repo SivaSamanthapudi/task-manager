@@ -1,13 +1,7 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Pagination } from '../../utils/interfaces/interfaces';
 
 @Component({
   selector: 'app-pagination',
@@ -17,14 +11,14 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './pagination.component.scss',
 })
 export class PaginationComponent implements OnChanges {
-
   @Input() totalItems: number = 0;
-  @Input() itemsPerPage: number = 5;
+  @Input() pageSize: number = 5;
   @Input() currentPage: number = 1;
-
-  @Output() pageChange = new EventEmitter<number>();
-  @Output() pageCountChange = new EventEmitter<number>();
-
+  
+  @Output() pageChange = new EventEmitter<Pagination>();
+  @Output() pageCountChange = new EventEmitter<Pagination>();
+  
+  paginationObject = {} as Pagination;
   pageNumbers: number[] = [];
   itemsPerPageArray = [5, 10, 15, 20];
   totalPages: number = 0;
@@ -35,10 +29,10 @@ export class PaginationComponent implements OnChanges {
     }
   }
 
-  buildPageNumbers() {
-    if (this.itemsPerPage <= 0) return;
+  private buildPageNumbers() {
+    if (this.pageSize <= 0) return;
 
-    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
 
     this.pageNumbers = this.totalPages
       ? Array.from({ length: this.totalPages }, (_, i) => i + 1)
@@ -52,7 +46,8 @@ export class PaginationComponent implements OnChanges {
   onSelectPage(page: number) {
     if (page === this.currentPage) return;
     this.currentPage = page;
-    this.pageChange.emit(page);
+    this.paginationObject = this.buildPaginationObject();
+    this.pageChange.emit(this.paginationObject);
   }
 
   onNextPage() {
@@ -67,10 +62,20 @@ export class PaginationComponent implements OnChanges {
     }
   }
 
-   onPageCountChange(size: number) {
-    this.itemsPerPage = size;
+  onPageCountChange(size: number) {
+    this.pageSize = size;
     this.currentPage = 1;
-    this.pageCountChange.emit(size);
+    this.paginationObject = this.buildPaginationObject();
+    this.pageCountChange.emit(this.paginationObject);
     this.buildPageNumbers();
+  }
+
+  private buildPaginationObject(): Pagination {
+    return {
+      totalItems: this.totalItems,
+      currentPage: this.currentPage,
+      pageSize: this.pageSize,
+      totalPages: this.totalPages,
+    };
   }
 }

@@ -5,3 +5,10 @@ export interface IError {
   message: string;
   type: ERROR_TYPE;
 }
+
+export interface Pagination {
+  totalItems: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+}

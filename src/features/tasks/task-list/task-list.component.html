@@ -39,7 +39,7 @@
 
   </div>
   <div class="mt-4">
-    <app-pagination [totalItems]="totalCount()" [itemsPerPage]="5"
+    <app-pagination [totalItems]="totalCount()" [pageSize]="5"
       (pageChange)="onPageChanged($event)" (pageCountChange)="onCountChange($event)">
     </app-pagination>
   </div>

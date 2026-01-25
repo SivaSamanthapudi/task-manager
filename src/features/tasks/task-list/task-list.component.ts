@@ -1,3 +1,4 @@
+import { UserService } from './../../../services/user.service';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,9 +7,9 @@ import { Signal } from '@angular/core';
 import { TasksService } from '../../../services/tasks.service';
 import { Task } from '../../../models/task.model';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
-import { UserService } from '../../../services/user.service';
 import { TaskCreateComponent } from '../task-create/task-create.component';
 import { ITEMS_PER_PAGE } from '../../../utils/constants/constants';
+import { Pagination } from '../../../utils/interfaces/interfaces';
 
 @Component({
   selector: 'app-task-list',
@@ -22,14 +23,14 @@ export class TaskListComponent {
   tasks: Signal<Task[]> = this.taskService.tasks;
   totalCount: Signal<number> = this.taskService.totalCount;
   selectedTask: Task = {} as Task;
-  itemsPerPage: number = ITEMS_PER_PAGE;
+  pageSize: number = ITEMS_PER_PAGE;
+  currentPage = 1;
   showModal: boolean = false;
-  currentPageNumber = 1;
 
   constructor(public userService: UserService) {}
 
   ngOnInit() {
-    this.taskService.getTasks(this.currentPageNumber, this.itemsPerPage);
+    this.taskService.getTasks(this.currentPage, this.pageSize);
   }
 
   onEdit(task: Task) {
@@ -55,13 +56,15 @@ export class TaskListComponent {
     this.taskService.deleteTask(id);
   }
 
-  onPageChanged(event: any) {
-    this.currentPageNumber = event;
-    this.taskService.getTasks(this.currentPageNumber, this.itemsPerPage);
+  onPageChanged(event: Pagination) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageSize;
+    this.taskService.getTasks(event.currentPage, this.pageSize);
   }
 
-  onCountChange(event: any) {
-    this.itemsPerPage = event;
-    this.taskService.getTasks(this.currentPageNumber, this.itemsPerPage);
+  onCountChange(event: Pagination) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.currentPage;
+    this.taskService.getTasks(this.currentPage, this.pageSize);
   }
 }

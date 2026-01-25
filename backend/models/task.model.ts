@@ -1,4 +1,5 @@
 import mongoose, { Schema} from 'mongoose';
+import { TASK, USER } from './constants.model';
 
 const taskSchema = new Schema({
   title: {
@@ -28,4 +29,4 @@ const taskSchema = new Schema({
   },
 });
 
-export const Task = mongoose.model('Task', taskSchema);
+export const Task = mongoose.model(TASK, taskSchema);

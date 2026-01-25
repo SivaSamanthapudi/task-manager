@@ -8,7 +8,7 @@ export const checkAuth = (req:any, res:any, next:any) => {
     
     // Verify the token
     const decodedToken = jwt.verify(token, SECRET_KEY);
-    
+    console.log('decodedToken',decodedToken);
     // Attach user data to the request object so routes can use it
     req.userData = { email: decodedToken.email, userId: decodedToken.userId };
     

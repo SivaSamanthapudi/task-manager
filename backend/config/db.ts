@@ -1,7 +1,6 @@
 require('dotenv').config();
 import mongoose from 'mongoose';
 
-
 /* MongoDB Connection */
 mongoose
   .connect(

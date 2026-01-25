@@ -18,7 +18,7 @@
         </ul>
 
         <div class="d-flex align-items-center pagination mb-0">
-                <select class="form-select form-select-sm w-auto page-item" name="itemsPerPage" [ngModel]="itemsPerPage"
+                <select class="form-select form-select-sm w-auto page-item" name="pageSize" [ngModel]="pageSize "
                         (ngModelChange)="onPageCountChange($event)">
                         <option *ngFor="let count of itemsPerPageArray" [value]="count">
                                 {{ count }}

@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import mongoose, { Schema, Document } from 'mongoose';
+import { USER } from './constants.model';
 
 export interface IUser extends Document {
   firstName: string;

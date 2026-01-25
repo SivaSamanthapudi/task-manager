@@ -1,4 +1,5 @@
 import mongoose, { Schema} from 'mongoose';
+import { POST } from './constants.model';
 
 const postSchema = new Schema({
   title: {
@@ -15,4 +16,4 @@ const postSchema = new Schema({
   },
 });
 
-export const Post =  mongoose.model('Post', postSchema);
+export const Post =  mongoose.model(POST, postSchema);

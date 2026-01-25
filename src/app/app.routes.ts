@@ -8,6 +8,8 @@ import { LoginComponent } from '../features/login/login.component';
 import { SignupComponent } from '../features/signup/signup.component';
 import { ForgotComponent } from '../features/forgot/forgot.component';
 import { authGuard } from '../guards/auth-guard';
+import { ExpenseTrackerComponent } from '../features/expense-tracker/expense-tracker.component';
+import { GroupsComponent } from '../features/expense-tracker/groups/groups';
 
 export const routes: Routes = [
   {
@@ -27,6 +29,18 @@ export const routes: Routes = [
     component: TasksComponent,
     pathMatch: 'full',
     canActivate: [authGuard],
+  },
+  {
+    path: 'expense-tracker',
+    component: ExpenseTrackerComponent,
+    canActivateChild: [authGuard],
+    children: [
+      {
+        path: 'groups',
+        component: GroupsComponent,
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: 'home',

@@ -12,9 +12,11 @@
     "isolatedModules": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "noImplicitAny": false,
     "target": "ES2022",
     "module": "preserve"
   },
+  "typeRoots": ["./node_modules/@types", "./backend/types"],
   "include": ["backend/**/*.ts", "backend/types/express.d.ts"],
   "exclude": ["backend/**/*.spec.ts"],
   "angularCompilerOptions": {
