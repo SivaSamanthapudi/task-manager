@@ -39,4 +39,4 @@ userSchema.pre('save', async function (this: IUser) {
   }
 });
 
-export const User =mongoose.model<IUser>('User', userSchema);
+export const User =mongoose.model<IUser>(USER, userSchema);

@@ -8,7 +8,7 @@ const expenseSchema = new Schema({
   amount: { type: Number, required: true },
   currency: { type: String, required: true },
   createdOn: { type: Date, required: true },
-  creator: {
+  createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: USER,
     required: true,

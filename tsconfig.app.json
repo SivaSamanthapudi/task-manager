@@ -8,10 +8,12 @@
       "node"
     ]
   },
+  "files": [],
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
+    "backend/**/*",
     "src/**/*.spec.ts"
   ]
 }

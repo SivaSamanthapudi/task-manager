@@ -23,7 +23,7 @@
 
                     <div class="mt-auto pt-3 border-top">
                         <small class="d-block text-muted">
-                            Created by: {{ userService.getUserNameById(group?.creator) }}
+                            Created by: {{ group?.createdBy?.firstName}} {{group?.createdBy?.lastName }}
                         </small>
                         <small class="d-block text-muted">
                             <!-- Created on: {{ group.createdOn | date:'dd-MMM-yyyy' }} -->

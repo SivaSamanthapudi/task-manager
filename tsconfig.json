@@ -17,8 +17,8 @@
     "module": "preserve"
   },
   "typeRoots": ["./node_modules/@types", "./backend/types"],
-  "include": ["backend/**/*.ts", "backend/types/express.d.ts"],
-  "exclude": ["backend/**/*.spec.ts"],
+  "include": ["backend/types/express/express.d.ts"],
+  "exclude": ["backend/**/*", "backend/**/*.spec.ts"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": false,

@@ -6,7 +6,7 @@ const groupSchema = new Schema({
   description: { type: String, required: false },
   currency: { type: String, required: true },
   createdOn: { type: Date, required: true },
-  creator: {
+  createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: USER,
     required: true,

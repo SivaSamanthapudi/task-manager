@@ -1,17 +1,18 @@
+import { USER } from '../models/constants.model';
 import { Group } from '../models/group.model';
 import { Request, Response } from 'express';
 
 export const addGroup = async (req: Request, res: Response) => {
   try {
     const { title, description, currency, createdOn } = req.body;
-    const creator = req.userData?.userId;
+    const createdBy = req.userData?.userId;
     const group = new Group({
       title,
       description,
       currency,
       createdOn,
-      members: [creator],
-      creator,
+      members: [createdBy],
+      createdBy,
       expenses: [],
     });
 
@@ -26,7 +27,7 @@ export const addGroup = async (req: Request, res: Response) => {
         currency: createdGroup.currency,
         createdOn: createdGroup.createdOn,
         members: createdGroup.members,
-        creator: createdGroup.creator,
+        createdBy: createdGroup.createdBy,
         expenses: createdGroup.expenses,
       },
     });
@@ -40,7 +41,10 @@ export const addGroup = async (req: Request, res: Response) => {
 
 export const getGroups = async (req: Request, res: Response) => {
   try {
-    const groups = await Group.find().sort({ createdAt: -1 });
+    const groups = await Group.find()
+      .populate('createdBy', 'firstName lastName')
+      .sort({ createdOn: -1 })
+      .exec();
     const transformedGroups = groups.map((group) => ({
       id: group._id,
       title: group.title,
@@ -48,7 +52,7 @@ export const getGroups = async (req: Request, res: Response) => {
       currency: group.currency,
       createdOn: group.createdOn,
       members: group.members,
-      creator: group.creator,
+      createdBy: group.createdBy,
       expenses: group.expenses,
     }));
     const totalCount = await Group.countDocuments();

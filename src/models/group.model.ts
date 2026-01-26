@@ -1,11 +1,11 @@
-import { Expense } from "./expense.model";
+import { Expense } from './expense.model';
 
 export interface Group {
   title: string;
   description: string;
   currency: string;
   createdOn: Date;
-  creator: string;
+  createdBy: { firstName: string; lastName: string };
   members?: string[];
   expenses?: Expense[];
 }
