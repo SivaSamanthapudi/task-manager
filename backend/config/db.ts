@@ -1,15 +1,11 @@
-require('dotenv').config();
+import dns from 'dns';
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 import mongoose from 'mongoose';
 
-/* MongoDB Connection */
-mongoose
-  .connect(
-    process.env['MONGO_URI'] ||
-      `mongodb+srv://${process.env['DB_USERNAME']}:${process.env['DB_PASSWORD']}@cluster0.pfrdd6o.mongodb.net/learning`,
-  )
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((err) => {
-    console.error('MongoDB connection failed:', err);
-  });
+export const connectDB = async (): Promise<void> => {
+  const uri = process.env['MONGODB_URI'];
+  if (!uri) throw new Error('MONGODB_URI is not defined in environment variables');
+
+  await mongoose.connect(uri);
+  console.log('MongoDB connected');
+};

@@ -20,22 +20,24 @@ bootstrapApplication(App, {
   providers: [
     provideRouter(routes),
     provideHttpClient(),
-    provideHttpClient(withInterceptorsFromDi()), // Enable DI-based interceptors
+    provideHttpClient(withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true, // Allows for multiple interceptors in the project
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
-      multi: true, // Allows for multiple interceptors in the project
+      multi: true,
     },
 
-    // NgRx integration
-    provideStore({ [postsFeatureKey]: postsReducer, [tasksFeatureKey]: tasksReducer }),
-    provideEffects([PostsEffects, TasksEffects]),
+    // NgRx integration - ensure store is provided before effects
+    provideStore({
+      [postsFeatureKey]: postsReducer,
+      [tasksFeatureKey]: tasksReducer,
+    }),
+    provideEffects(PostsEffects, TasksEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: environment.production }),
-
   ],
 }).catch((err) => console.error(err));
