@@ -1,15 +1,16 @@
 import { UserService } from './../../../services/user.service';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Signal } from '@angular/core';
 
-import { TasksService } from '../../../services/tasks.service';
 import { Task } from '../../../models/task.model';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 import { TaskCreateComponent } from '../task-create/task-create.component';
 import { ITEMS_PER_PAGE } from '../../../utils/constants/constants';
 import { Pagination } from '../../../utils/interfaces/interfaces';
+import { Store } from '@ngrx/store';
+import * as TasksActions from '../../../app/state/tasks/tasks.actions';
+import * as TasksSelectors from '../../../app/state/tasks/tasks.selectors';
 
 @Component({
   selector: 'app-task-list',
@@ -19,9 +20,9 @@ import { Pagination } from '../../../utils/interfaces/interfaces';
   styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent {
-  private taskService = inject(TasksService);
-  tasks: Signal<Task[]> = this.taskService.tasks;
-  totalCount: Signal<number> = this.taskService.totalCount;
+  private store = inject(Store);
+  tasks = signal<Task[]>([]);
+  totalCount = signal<number>(0);
   selectedTask: Task = {} as Task;
   pageSize: number = ITEMS_PER_PAGE;
   currentPage = 1;
@@ -30,7 +31,13 @@ export class TaskListComponent {
   constructor(public userService: UserService) {}
 
   ngOnInit() {
-    this.taskService.getTasks(this.currentPage, this.pageSize);
+    this.store.select(TasksSelectors.selectAllTasks).subscribe((t) => this.tasks.set(t));
+    this.store.select(TasksSelectors.selectTasksTotalCount).subscribe((c) => this.totalCount.set(c));
+    this.load(this.currentPage, this.pageSize);
+  }
+
+  private load(page: number, size: number) {
+    this.store.dispatch(TasksActions.loadTasks({ page, size }));
   }
 
   onEdit(task: Task) {
@@ -53,18 +60,18 @@ export class TaskListComponent {
   }
 
   onDelete(id: string) {
-    this.taskService.deleteTask(id);
+    this.store.dispatch(TasksActions.deleteTask({ id }));
   }
 
   onPageChanged(event: Pagination) {
     this.pageSize = event.pageSize;
-    this.currentPage = event.pageSize;
-    this.taskService.getTasks(event.currentPage, this.pageSize);
+    this.currentPage = event.currentPage;
+    this.load(this.currentPage, this.pageSize);
   }
 
   onCountChange(event: Pagination) {
     this.pageSize = event.pageSize;
     this.currentPage = event.currentPage;
-    this.taskService.getTasks(this.currentPage, this.pageSize);
+    this.load(this.currentPage, this.pageSize);
   }
 }

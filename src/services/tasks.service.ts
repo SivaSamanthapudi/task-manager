@@ -15,6 +15,39 @@ export class TasksService {
 
   constructor(private http: HttpClient) {}
 
+  // Observable APIs for NgRx effects
+  fetchTasks$(pageNumber: number = 1, pageSize: number = 5) {
+    const GET_TASKS_API_URL = `${TASKS_API_URL}?page=${pageNumber}&size=${pageSize}`;
+
+    return this.http.get<{ message: string; tasks: any[]; count: number }>(GET_TASKS_API_URL).pipe(
+      map((res) => ({
+        count: res.count,
+        tasks: res.tasks.map((p) => ({
+          id: p.id,
+          title: p.title,
+          description: p.description,
+          createdAt: new Date(p.createdAt),
+          updatedOn: p.updatedOn ? new Date(p.updatedOn) : null,
+          dueBy: p.dueBy ? new Date(p.dueBy) : null,
+          creator: p.creator ?? null,
+        })),
+      })),
+    );
+  }
+
+  addTask$(task: Task) {
+    return this.http.post<{ message: string; task: Task }>(TASKS_API_URL, task).pipe(map((r) => r.task));
+  }
+
+  updateTask$(task: Task) {
+    return this.http.put(`${TASKS_API_URL}/${task.id}`, task).pipe(map(() => task));
+  }
+
+  deleteTask$(id: string) {
+    return this.http.delete(`${TASKS_API_URL}/${id}`).pipe(map(() => id));
+  }
+
+  // Existing signal/cache-based APIs for backward compatibility
   getTasks(pageNumber: number = 1, pageSize: number = 5) {
     const cacheKey = `${pageNumber}_${pageSize}`;
 
@@ -24,29 +57,11 @@ export class TasksService {
       return;
     }
 
-    const GET_TASKS_API_URL = `${TASKS_API_URL}?page=${pageNumber}&size=${pageSize}`;
-
-    this.http
-      .get<{ message: string; tasks: any[]; count: number }>(GET_TASKS_API_URL)
-      .pipe(
-        map((res) => ({
-          count: res.count,
-          tasks: res.tasks.map((p) => ({
-            id: p.id,
-            title: p.title,
-            description: p.description,
-            createdAt: new Date(p.createdAt),
-            updatedOn: p.updatedOn ? new Date(p.updatedOn) : null,
-            dueBy: p.dueBy ? new Date(p.dueBy) : null,
-            creator: p.creator ?? null,
-          })),
-        })),
-      )
-      .subscribe((data) => {
-        // 💾 Save to cache
-        this.taskCache.set(cacheKey, data);
-        this._tasks.set(data);
-      });
+    this.fetchTasks$(pageNumber, pageSize).subscribe((data) => {
+      // 💾 Save to cache
+      this.taskCache.set(`${pageNumber}_${pageSize}`, data);
+      this._tasks.set(data);
+    });
   }
 
   addTask(title: string, description: string, updatedOn: Date | null, dueBy: Date | null | string) {
@@ -58,7 +73,7 @@ export class TasksService {
       dueBy: dueBy ?? null,
     };
 
-    this.http.post<{ message: string; task: Task }>(TASKS_API_URL, task).subscribe(() => {
+    this.addTask$(task).subscribe(() => {
       this.clearTaskCache();
       this.getTasks(1, ITEMS_PER_PAGE);
     });
@@ -67,14 +82,14 @@ export class TasksService {
   updateTask(task: Task) {
     const updatedTask: Task = task;
 
-    this.http.put(`${TASKS_API_URL}/${updatedTask.id}`, updatedTask).subscribe(() => {
+    this.updateTask$(updatedTask).subscribe(() => {
       this.clearTaskCache();
       this.getTasks(1, ITEMS_PER_PAGE);
     });
   }
 
   deleteTask(id: string) {
-    this.http.delete(`${TASKS_API_URL}/${id}`).subscribe(() => {
+    this.deleteTask$(id).subscribe(() => {
       this.clearTaskCache();
       this.getTasks(1, ITEMS_PER_PAGE);
     });

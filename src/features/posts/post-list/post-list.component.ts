@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Signal } from '@angular/core';
 
 import { Post } from '../../../models/post.model';
-import { PostsService } from '../../../services/posts.service';
+import { Store } from '@ngrx/store';
+import * as PostsActions from '../../../app/state/posts/posts.actions';
+import * as PostsSelectors from '../../../app/state/posts/posts.selectors';
 
 @Component({
   selector: 'app-post-list',
@@ -14,18 +15,19 @@ import { PostsService } from '../../../services/posts.service';
   styleUrls: ['./post-list.component.scss'],
 })
 export class PostListComponent {
-  private postsService = inject(PostsService);
-  posts: Signal<Post[]> = this.postsService.posts;
+  private store = inject(Store);
+  posts = signal<Post[]>([]);
   editedPost: Post = {} as Post;
 
   constructor() {}
 
   ngOnInit() {
-    this.postsService.getPosts();
+    this.store.select(PostsSelectors.selectAllPosts).subscribe((posts) => this.posts.set(posts));
+    this.store.dispatch(PostsActions.loadPosts());
   }
 
   onEdit(post: Post) {
-    this.editedPost = {...post};
+    this.editedPost = { ...post };
   }
 
   onDismiss() {
@@ -33,10 +35,10 @@ export class PostListComponent {
   }
 
   onUpdate() {
-    this.postsService.updatePost(this.editedPost);
+    this.store.dispatch(PostsActions.updatePost({ post: this.editedPost }));
   }
 
   onDelete(id: string) {
-    this.postsService.deletePost(id);
+    this.store.dispatch(PostsActions.deletePost({ id }));
   }
 }

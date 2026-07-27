@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
-import { TasksService } from '../../../services/tasks.service';
 import { Task } from '../../../models/task.model';
+import { Store } from '@ngrx/store';
+import * as TasksActions from '../../../app/state/tasks/tasks.actions';
 
 @Component({
   selector: 'app-task-create',
@@ -13,6 +14,7 @@ import { Task } from '../../../models/task.model';
   standalone: true,
 })
 export class TaskCreateComponent {
+  private store = inject(Store);
   @Output() close = new EventEmitter<void>();
   @Input() isEdit = false;
   @Input() task: Task = {
@@ -23,14 +25,21 @@ export class TaskCreateComponent {
     createdAt: null,
   };
 
-  constructor(public taskService: TasksService) {}
+  constructor() {}
 
   onSave(form: NgForm) {
     if (this.isEdit) {
       const selectedTask = { ...this.task, updatedOn: new Date() };
-      this.taskService.updateTask(selectedTask);
+      this.store.dispatch(TasksActions.updateTask({ task: selectedTask }));
     } else {
-      this.taskService.addTask(this.task.title, this.task.description, null, this.task.dueBy);
+      const newTask: Task = {
+        title: this.task.title,
+        description: this.task.description,
+        createdAt: new Date(),
+        updatedOn: null,
+        dueBy: this.task.dueBy ?? null,
+      };
+      this.store.dispatch(TasksActions.addTask({ task: newTask }));
     }
     form.resetForm();
     this.close.emit();

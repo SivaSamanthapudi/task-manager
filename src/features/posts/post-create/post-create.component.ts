@@ -1,8 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { FormsModule, NgForm } from "@angular/forms";
 
 import { CommonModule } from "@angular/common";
-import { PostsService } from "../../../services/posts.service";
+import { Store } from "@ngrx/store";
+import * as PostsActions from "../../../app/state/posts/posts.actions";
+import { Post } from "../../../models/post.model";
 
 @Component({
   selector: "app-post-create",
@@ -12,14 +14,17 @@ import { PostsService } from "../../../services/posts.service";
   standalone:true
 })
 export class PostCreateComponent {
+  private store = inject(Store);
 
-  constructor(public postsService: PostsService) {}
+  constructor() {}
 
   onAddPost(form: NgForm) {
     if (form.invalid) {
       return;
     }
-    this.postsService.addPost(form.value.title, form.value.content, new Date());
+
+    const post: Post = { title: form.value.title, content: form.value.content, createdAt: new Date() };
+    this.store.dispatch(PostsActions.addPost({ post }));
     form.resetForm();
   }
 }

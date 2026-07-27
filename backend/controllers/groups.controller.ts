@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 export const addGroup = async (req: Request, res: Response) => {
   try {
     const { title, description, currency, createdOn } = req.body;
-    const creator = req.userData?.userId;
+    const creator = (req as any).userData?.userId;
     const group = new Group({
       title,
       description,
