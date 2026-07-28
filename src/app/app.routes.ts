@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
-import { PostsComponent } from '../features/posts/posts.component';
 import { UsersComponent } from '../features/users/users';
 import { PageNotFoundComponent } from '../features/page-not-found/page-not-found';
-import { TasksComponent } from '../features/tasks/tasks.component';
 import { HomeComponent } from '../features/home/home.component';
 import { LoginComponent } from '../features/login/login.component';
 import { SignupComponent } from '../features/signup/signup.component';
@@ -23,12 +21,22 @@ export const routes: Routes = [
     pathMatch: 'full',
     canActivate: [authGuard],
   },
-  { path: 'posts', component: PostsComponent, pathMatch: 'full', canActivate: [authGuard] },
   {
-    path: 'tasks',
-    component: TasksComponent,
+    path: 'posts',
+    loadComponent: () => import('../features/posts/posts.component').then((m) => m.PostsComponent),
     pathMatch: 'full',
     canActivate: [authGuard],
+  },
+  {
+    path: 'tasks',
+    loadComponent: () => import('../features/tasks/tasks.component').then((m) => m.TasksComponent),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'insights',
+        loadComponent: () => import('../features/tasks/task-insights/task-insights.component').then((m) => m.TaskInsightsComponent),
+      },
+    ],
   },
   {
     path: 'expense-tracker',
