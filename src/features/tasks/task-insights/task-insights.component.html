@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-12 mb-3">
+    <h5>Task Insights</h5>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm p-3">
+      <div class="text-muted">Total Tasks</div>
+      <div class="h3 mt-2">{{ totalTasks() }}</div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm p-3">
+      <div class="text-muted">Overdue Tasks</div>
+      <div class="h3 mt-2 text-danger">{{ overdueTasks() }}</div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm p-3">
+      <div class="text-muted">Due Within 7 Days</div>
+      <div class="h3 mt-2 text-warning">{{ dueSoonTasks() }}</div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card shadow-sm p-3">
+      <div class="mb-2 text-muted">Upcoming Tasks</div>
+      <ng-container *ngIf="recentTasks().length; else noTasks">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngFor="let task of recentTasks()">
+            <strong>{{ task.title }}</strong>
+            <div class="small text-muted">
+              Due: {{ task.dueBy ? (task.dueBy | date:'mediumDate') : 'No due date' }}
+            </div>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #noTasks>
+        <p class="text-muted m-0">No upcoming tasks to display.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>
