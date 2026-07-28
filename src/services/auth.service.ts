@@ -44,7 +44,8 @@ export class AuthService {
 
   authenticateUser(email: string, password: string) {
     const USER_LOGIN_API_URL = `${USER_API_URL}/login`;
-    this.http.post<any>(USER_LOGIN_API_URL, { email, password }).subscribe((res) => {
+    this.http.post<any>(USER_LOGIN_API_URL, { email, password })
+    .subscribe((res) => {
       const expiresInDuration = res.expiresIn * 1000; // e.g., 3600 seconds -> ms
       const now = new Date();
       const expirationDate = new Date(now.getTime() + expiresInDuration);
@@ -59,7 +60,11 @@ export class AuthService {
       this.setAutoLogoutTimer(expiresInDuration);
       this.userService.getUsers();
       this.router.navigate(['/']);
-    });
+    }),
+    (error) => {
+      this.handleLoginError(error);
+    };
+
   }
 
   autoLogin() {

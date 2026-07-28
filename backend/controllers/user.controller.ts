@@ -29,7 +29,7 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({ email }).select('+password');
 
     if (!user || !(await bcrypt.compare(password, user.password!))) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({     code: 'INVALID_CREDENTIALS', message: 'Invalid credentials' });
     }
 
     const token = jwt.sign({ userId: user._id, email: user.email }, SECRET_KEY, {
@@ -40,9 +40,11 @@ export const login = async (req: Request, res: Response) => {
       token,
       expiresIn: 3600,
       user: { id: user._id, firstName: user.firstName },
+      code: 'LOGIN_SUCCESS', 
+      message: 'Login Successful',
     });
   } catch (err) {
-    res.status(500).json({ message: 'Login failed' });
+    res.status(500).json({ code: 'LOGIN_FAILED', message: 'Login failed' });
   }
 };
 

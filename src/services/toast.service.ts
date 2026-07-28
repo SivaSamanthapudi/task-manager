@@ -23,7 +23,7 @@ export class ToasterService {
     this.errorCode = code;
   }
 
-  getErrorInfo(errorCode): IError {
+  getErrorInfo(errorCode): IError |null {
     return ERRORS.find((item) => item.code == errorCode) || null;
   }
 
