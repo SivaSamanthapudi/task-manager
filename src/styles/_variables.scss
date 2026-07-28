@@ -2,14 +2,52 @@
   /* Base colors */
   --color-body-bg: ghostwhite;
 
-  --color-primary: #563d7c;
-  --color-secondary: #e387f536;
+ --color-primary: #563d7c; /* brand */
+ --color-primary-contrast: #ffffff;
+ --color-secondary: rgba(227, 135, 245, 0.21);
 
-  --color-border: #ccc;
+ --color-surface: #ffffff;
+ --color-border: #e6e6e6;
 
-  /* Status colors */
-  --color-success: #89c162;
-  --color-error: #de554a;
-  --color-warning: #eda42c;
-  --color-info: #2c89bd;
+ /* Typography */
+ --font-family-base: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+ --font-size-base: 14px;
+ --font-size-lg: 16px;
+ --font-size-sm: 12px;
+
+ /* Spacing */
+ --space-xxs: 4px;
+ --space-xs: 8px;
+ --space-sm: 12px;
+ --space-md: 16px;
+ --space-lg: 24px;
+ --space-xl: 32px;
+
+ /* Sizes / radius */
+ --radius-sm: 4px;
+ --radius-md: 8px;
+ --elevation-sm: 0 1px 3px rgba(0,0,0,0.08);
+
+ /* Status colors */
+ --color-success: #89c162;
+ --color-error: #de554a;
+ --color-warning: #eda42c;
+ --color-info: #2c89bd;
+}
+
+/* Dark theme overrides - toggled by adding .dark-theme to <html> or <body> */
+.dark-theme {
+ --color-body-bg: #0f1720;
+ --color-surface: #0b1220;
+ --color-primary: #7c5cff;
+ --color-primary-contrast: #000000;
+ --color-border: #1f2a37;
+ --color-secondary: rgba(125, 90, 255, 0.08);
+
+ --color-success: #6bd08b;
+ --color-error: #ff7b7b;
+ --color-warning: #ffb86b;
+ --color-info: #5fb4ff;
+
+ --font-color: #e6eef8;
 }

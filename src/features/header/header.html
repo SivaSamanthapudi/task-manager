@@ -41,7 +41,10 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/home">Welcome, {{ authService.getLoggedUserInfo() }}!</a>
         </li>
-        <li class="nav-item d-flex align-items-center">
+        <li class="nav-item d-flex align-items-center me-2">
+          <button class="btn btn-outline-light btn-sm me-2" (click)="toggleTheme()" aria-label="Toggle theme">
+            Theme
+          </button>
           <button class="btn btn-outline-danger btn-sm" (click)="onLogout()">
             Logout
           </button>

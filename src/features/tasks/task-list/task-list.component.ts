@@ -12,12 +12,11 @@ import { Store } from '@ngrx/store';
 import * as TasksActions from '../../../app/state/tasks/tasks.actions';
 import * as TasksSelectors from '../../../app/state/tasks/tasks.selectors';
 import { CardComponent } from '../../../shared/card.component';
-import { ActionButtonComponent } from '../../../shared/action-button.component';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginationComponent, TaskCreateComponent, CardComponent, ActionButtonComponent],
+  imports: [CommonModule, FormsModule, PaginationComponent, TaskCreateComponent, CardComponent],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
 })
