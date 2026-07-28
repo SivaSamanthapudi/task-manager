@@ -4,9 +4,16 @@ import userRoutes from './routes/user.routes';
 import tasksRoutes from './routes/tasks.routes';
 import postRoutes from './routes/posts.routes';
 import groupRoutes from './routes/groups.routes';
-const app = express();
+import helmet from 'helmet';
 
-app.use(cors());
+const app = express();
+const allowedOrigins = (process.env['CORS_ORIGINS'] ?? 'http://localhost:3000,http://localhost:4201,http://localhost:4200')
+  .split(',')
+  .map(o => o.trim());
+
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+
 app.use(express.json());
 
 app.use('/api/user', userRoutes);
