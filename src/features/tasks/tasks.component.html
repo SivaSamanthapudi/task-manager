@@ -1,29 +1,31 @@
 <div class="col-md-12 mx-auto">
   <div class="row align-items-end mt-2 mb-2 m-1">
     <div class="col">
-      <h3 class="fw-bold">Tasks</h3>
+      <h3 class="fw-bold">{{ childOutlet?.isActivated ? 'Task Insights' : 'Tasks' }}</h3>
     </div>
     <div class="col-auto d-flex gap-2">
-      <button class="btn btn-secondary shadow-sm" (click)="onAddTask()">
+      <a *ngIf="childOutlet?.isActivated" class="btn btn-outline-secondary" routerLink="/tasks">
+        Back to Tasks
+      </a>
+      <button *ngIf="!childOutlet?.isActivated" class="btn btn-secondary shadow-sm" (click)="onAddTask()">
         + Add New Task
       </button>
-      <a class="btn btn-outline-primary" routerLink="insights" routerLinkActive="active">
+      <a *ngIf="!childOutlet?.isActivated" class="btn btn-outline-primary" routerLink="insights" routerLinkActive="active">
         View Insights
       </a>
     </div>
   </div>
 
-  @if (isModalOpen) {
-    <app-task-create (close)="closeModal()"></app-task-create>
-  }
+  <router-outlet #childOutlet="outlet"></router-outlet>
 
-  <div class="card border-0 shadow-sm mb-3">
-    <app-task-list></app-task-list>
-  </div>
-
-  <div class="card border-0 shadow-sm">
-    <div class="card-body py-3">
-      <router-outlet></router-outlet>
+  <ng-container *ngIf="!childOutlet?.isActivated">
+    <div *ngIf="isModalOpen">
+      <app-task-create (close)="closeModal()"></app-task-create>
     </div>
-  </div>
+
+    <div class="card border-0 shadow-sm mb-3">
+      <app-task-list></app-task-list>
+    </div>
+  </ng-container>
+
 </div>
