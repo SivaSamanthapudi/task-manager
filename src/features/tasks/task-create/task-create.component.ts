@@ -5,12 +5,13 @@ import { CommonModule } from '@angular/common';
 import { Task } from '../../../models/task.model';
 import { Store } from '@ngrx/store';
 import * as TasksActions from '../../../app/state/tasks/tasks.actions';
+import { ModalComponent } from '../../../shared/modal/modal.component';
 
 @Component({
   selector: 'app-task-create',
   templateUrl: './task-create.component.html',
   styleUrls: ['./task-create.component.scss'],
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ModalComponent],
   standalone: true,
 })
 export class TaskCreateComponent {
